@@ -1,0 +1,35 @@
+from lnn import And, Implies, Or,  Equivalent, Fact, Proposition, Model
+
+# Knowledge
+A = Proposition("A")
+B = Proposition("B")
+C = Proposition("C")
+D = Proposition("D")
+E = Proposition("E")
+A_implies_B = Implies(A, B)
+C_and_D = And(C, D)
+C_and_D_equivalent_E = Equivalent(C_and_D, E)
+root = And(A_implies_B, C_and_D_equivalent_E)
+
+B_disjunction_D = Or(B, D)
+BDE_disjunction = Or(B_disjunction_D, E)
+
+# Data
+root.add_data(Fact.TRUE)
+C.add_data(Fact.TRUE)
+E.add_data((0.3, 0.7))
+A.add_data((0.8, 1))
+
+
+model = Model()
+model.add_knowledge(root)
+
+# Reasoning
+model.infer()
+root.print()
+
+def format_result(node):
+    round_off = lambda my_list: [float(f"{_:.1f}") for _ in my_list]
+    return f"{node.state().name}: {tuple(round_off(node.get_data().tolist()))}"
+
+format_result(root)
